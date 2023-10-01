@@ -42,15 +42,59 @@
     </LinearLayout>
 
 
-
-    <com.google.android.material.slider.Slider
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:valueFrom="4"
-        android:valueTo="100"
-        android:stepSize="1"
-        />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:text="Quantidade de caracteres:"
+            android:padding="10dp"
+            android:fontFamily="@font/rubik_mono_one"
+            android:textSize="10dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:valueFrom="4"
+            android:valueTo="100"
+            android:stepSize="1"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/valorMinimoSlider"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="4"/>
+            <TextView
+                android:id="@+id/valorAtualSlider"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="100"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/valorMaximoSlider"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="100"
+                android:textAlignment="textEnd"/>
+        </LinearLayout>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
