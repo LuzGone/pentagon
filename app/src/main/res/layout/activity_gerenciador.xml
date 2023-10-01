@@ -59,6 +59,7 @@
             />
 
         <com.google.android.material.slider.Slider
+            android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -123,7 +124,22 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="top|center"
+        >
+        <Button
+            android:id="@+id/botaoConfirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirmar"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/botaoExcluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Excluir"
+            android:layout_marginRight="10dp"
+            />
         <Button
             android:id="@+id/botaoCancelar"
             android:layout_width="wrap_content"

@@ -8,31 +8,40 @@ class Senha {
     private val intervaloDeNumeros : CharRange = ('0'..'9')
     private val caracteresEspeciais : CharArray = "!@#$%*-+=(){}[]".toCharArray()
 
-    constructor(descricao:String,temLM:Boolean,temCS:Boolean,temN:Boolean,tamanho: Int){
-        this.descricao = descricao;
-        gerarSenha(temLM,temCS,temN,tamanho)
+    private val temLM:Boolean;
+    private val temCS:Boolean;
+    private val temN:Boolean;
+    private val tamanho:Int;
+
+    constructor(descricao:String?,temLM:Boolean? = false,temCS:Boolean?,temN:Boolean?,tamanho: Int?){
+        this.descricao = if (descricao!=null) descricao else "";
+        this.temLM = if (temLM!=null) temLM else false;
+        this.temCS = if (temCS!=null) temCS else false;
+        this.temN = if (temN!=null) temN else false;
+        this.tamanho = if (tamanho!=null) tamanho else 4;
+        gerarSenha()
     }
 
-    fun gerarSenha(temLM:Boolean,temCS:Boolean,temN:Boolean,tamanho:Int){
+    fun gerarSenha(){
         var listaDeCaracteres = mutableListOf<Char>()
 
         for(caractere in intervaloDeLetrasMinusculas){
             listaDeCaracteres.add(caractere)
         }
 
-        if(temLM){
+        if(this.temLM){
             for(caractere in intervaloDeLetrasMaiusculas){
                 listaDeCaracteres.add(caractere)
             }
         }
 
-        if (temN){
+        if (this.temN){
             for(caractere in intervaloDeNumeros){
                 listaDeCaracteres.add(caractere)
             }
         }
 
-        if(temCS){
+        if(this.temCS){
             for(caractere in caracteresEspeciais){
                 listaDeCaracteres.add(caractere)
             }
