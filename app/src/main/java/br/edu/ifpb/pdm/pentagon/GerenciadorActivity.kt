@@ -71,9 +71,9 @@ class GerenciadorActivity : AppCompatActivity() {
     fun confirmar(){
         //A SENHA NÃO VAI SER CRIADA AQUI E SIM NO MAIN ACITIVITY ;-;
         val descricao = this.descricao.text.toString()
-        val temLM = this.letrasMaiusculas.isActivated
-        val temN = this.numeros.isActivated
-        val temCS = this.caracteresEspeciais.isActivated
+        val temLM = this.letrasMaiusculas.isChecked()
+        val temN = this.numeros.isChecked()
+        val temCS = this.caracteresEspeciais.isChecked()
         val tamanho = this.slider.value.toInt()
 
         val intent = Intent().apply {
