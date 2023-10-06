@@ -52,29 +52,56 @@ class MainActivity : AppCompatActivity() {
 //        this.listinhaDeSenha.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.caracteres)
         this.listinhaDeSenha.adapter = SenhaAdapter(this,this.senhas);
         this.listinhaDeSenha.setOnItemLongClickListener(PegarSenha())
-//        this.listinhaDeSenha.setOnItemClickListener {editarSenha()}
+        this.listinhaDeSenha.setOnItemClickListener (EditarSenha())
 
         this.botaoNovaSenha.setOnClickListener({irParaGerenciador()})
     }
 
     fun irParaGerenciador(){
-        val intent = Intent(this, GerenciadorActivity::class.java).apply {
-            putExtra("")
-        };
+        val intent = Intent(this, GerenciadorActivity::class.java)
         this.gerenciadorResult.launch(intent)
     }
+
 
     fun atualizarLista(senha:Senha){
         (this.listinhaDeSenha.adapter as SenhaAdapter).adicionar(senha)
     }
 
-    inner class PegarSenha: AdapterView.OnItemLongClickListener {
-       override fun onItemLongClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long):Boolean{
-           val senha = this@MainActivity.senhas.get(p2)
-           val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-           val clip: ClipData = ClipData.newPlainText("simple text", "${senha.getSenha()}")
-           clipboard.setPrimaryClip(clip)
-           return true
-       }
+    inner class EditarSenha: AdapterView.OnItemClickListener {
+        override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+            val senha = this@MainActivity.senhas.get(p2)
+            editarSenha(senha)
+        }
     }
+
+
+
+    fun editarSenha(senha:Senha){
+        val descricao = senha.getDescricao()
+        val temLM = senha.getTemLM()
+        val temN = senha.getTemN()
+        val temCS = senha.getTemCS()
+        val tamanho = senha.getTamanho()
+
+        val intent = Intent(this,GerenciadorActivity::class.java).apply {
+            putExtra("descricao",descricao)
+            putExtra("temLM",temLM)
+            putExtra("temN",temN)
+            putExtra("temCS",temCS)
+            putExtra("tamanho",tamanho)
+        }
+
+        this.gerenciadorResult.launch(intent)
+    }
+
+    inner class PegarSenha: AdapterView.OnItemLongClickListener {
+        override fun onItemLongClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long):Boolean{
+            val senha = this@MainActivity.senhas.get(p2)
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("simple text", "${senha.getSenha()}")
+            clipboard.setPrimaryClip(clip)
+            return true
+        }
+    }
+
 }

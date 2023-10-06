@@ -65,4 +65,14 @@ class Senha {
     fun getTamanho():Int{
         return this.tamanho
     }
+
+    fun getTemLM():Boolean{
+        return this.temLM
+    };
+    fun getTemCS():Boolean{
+        return this.temCS
+    };
+    fun getTemN():Boolean{
+        return this.temN
+    };
 }
