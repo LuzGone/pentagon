@@ -61,4 +61,8 @@ class Senha {
     fun getSenha():String{
         return this.senha;
     }
+
+    fun getTamanho():Int{
+        return this.tamanho
+    }
 }

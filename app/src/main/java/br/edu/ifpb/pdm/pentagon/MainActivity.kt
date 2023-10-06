@@ -1,14 +1,20 @@
 package br.edu.ifpb.pdm.pentagon
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.OnLongClickListener
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.get
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -29,10 +35,10 @@ class MainActivity : AppCompatActivity() {
 
                 Log.i("VALORES","${temCS} - ${temLM} - ${temN}")
                 val senha = Senha(descricao,temLM,temCS,temN,tamanho)
-                this.senhas.add(senha)
+//                this.senhas.add(senha)
                 Log.i("SENHA","${senha.getSenha()}")
                 Log.i("TAMANHO","${this.senhas.size}")
-                atualizarLista("${descricao} (${tamanho})")
+                atualizarLista(senha)
             }
         }
     }
@@ -43,25 +49,31 @@ class MainActivity : AppCompatActivity() {
         this.listinhaDeSenha = findViewById(R.id.listinhaDeSenhas);
         this.botaoNovaSenha = findViewById(R.id.botaoNovaSenha)
 
-        this.listinhaDeSenha.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.caracteres)
-        this.listinhaDeSenha.setOnLongClickListener{pegarSenha()}
-        this.listinhaDeSenha.setOnClickListener {editarSenha()}
+//        this.listinhaDeSenha.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.caracteres)
+        this.listinhaDeSenha.adapter = SenhaAdapter(this,this.senhas);
+        this.listinhaDeSenha.setOnItemLongClickListener(PegarSenha())
+//        this.listinhaDeSenha.setOnItemClickListener {editarSenha()}
 
         this.botaoNovaSenha.setOnClickListener({irParaGerenciador()})
     }
 
     fun irParaGerenciador(){
-        val intent = Intent(this, GerenciadorActivity::class.java);
+        val intent = Intent(this, GerenciadorActivity::class.java).apply {
+            putExtra("")
+        };
         this.gerenciadorResult.launch(intent)
     }
 
-    fun atualizarLista(texto:String){
-        (this.listinhaDeSenha.adapter as ArrayAdapter<String>).add(texto)
+    fun atualizarLista(senha:Senha){
+        (this.listinhaDeSenha.adapter as SenhaAdapter).adicionar(senha)
     }
 
-    inner class OnLongClickItem: OnLongClickListener(){
+    inner class PegarSenha: AdapterView.OnItemLongClickListener {
        override fun onItemLongClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long):Boolean{
-           this@MainActivity.caracteres.get(p2)
+           val senha = this@MainActivity.senhas.get(p2)
+           val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+           val clip: ClipData = ClipData.newPlainText("simple text", "${senha.getSenha()}")
+           clipboard.setPrimaryClip(clip)
            return true
        }
     }
