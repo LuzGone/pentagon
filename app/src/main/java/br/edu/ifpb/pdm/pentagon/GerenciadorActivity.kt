@@ -7,10 +7,13 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.slider.Slider
 
 class GerenciadorActivity : AppCompatActivity() {
     private lateinit var senha: Senha;
+    private var temSenha = false
+
 
     private lateinit var titulo:TextView;
     private lateinit var descricao:EditText;
@@ -28,15 +31,55 @@ class GerenciadorActivity : AppCompatActivity() {
     private lateinit var botaoCancelar:Button;
     private lateinit var botaoExcluir:Button;
 
+    private var senhaDescricao: String? = "";
+    private var senhaTemLM:Boolean? = false;
+    private var senhaTemN:Boolean? = false;
+    private var senhaTemCS:Boolean? = false;
+    private var senhaTamanho:Int? = 4;
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gerenciador)
 
+        if(intent.hasExtra("descricao")){
+            this.senhaDescricao = intent.getStringExtra("descricao")
+            this.temSenha = true;
+        }
+        if(intent.hasExtra("temLM")){
+            this.senhaTemLM = intent.getBooleanExtra("temLM",false);
+        }
+        if(intent.hasExtra("temN")){
+            this.senhaTemN = intent.getBooleanExtra("temN",false);
+        }
+        if(intent.hasExtra("temCS")){
+            this.senhaTemCS = intent.getBooleanExtra("temCS",false);
+        }
+        if(intent.hasExtra("tamanho")){
+            this.senhaTamanho = intent.getIntExtra("tamanho",4);
+        }
+
+        this.senha = Senha(
+            this.senhaDescricao,
+            this.senhaTemLM,
+            this.senhaTemCS,
+            this.senhaTemN,
+            this.senhaTamanho
+        )
+
+
+
         this.titulo = findViewById(R.id.titulo);
+        if(this.temSenha){
+            this.titulo.setText("Editar Senha")
+        }
+
         this.descricao = findViewById(R.id.descricao);
+        this.descricao.setText(this.senha.getDescricao())
 
         //Configuracoes do Slider
         this.slider = findViewById(R.id.slider);
+        this.slider.value = this.senha.getTamanho().toFloat()
         this.slider.addOnChangeListener{view,value:Float,fromUser:Boolean ->
             this.valorAtualSlider.setText("${this.slider.value}")
         }
@@ -51,8 +94,14 @@ class GerenciadorActivity : AppCompatActivity() {
         this.valorAtualSlider.setText("${this.slider.value}")
 
         this.letrasMaiusculas = findViewById(R.id.letrasMaiusculas);
+        this.letrasMaiusculas.isChecked = this.senha.getTemLM()
+
         this.numeros = findViewById(R.id.numeros);
+        this.numeros.isChecked = this.senha.getTemN()
+
         this.caracteresEspeciais = findViewById(R.id.caracteresEspeciais);
+        this.caracteresEspeciais.isChecked = this.senha.getTemCS()
+
 
         this.botaoConfirmar = findViewById(R.id.botaoConfirmar);
         this.botaoConfirmar.setOnClickListener{confirmar()}
@@ -61,6 +110,10 @@ class GerenciadorActivity : AppCompatActivity() {
         this.botaoCancelar.setOnClickListener{cancelar()}
 
         this.botaoExcluir = findViewById(R.id.botaoExcluir);
+        if(!this.temSenha){
+            this.botaoExcluir.isVisible = false
+        }
+        this.botaoExcluir.setOnClickListener{ excluir() }
 
     }
 
@@ -84,8 +137,20 @@ class GerenciadorActivity : AppCompatActivity() {
             putExtra("tamanho",tamanho)
         }
 
+        if(this.temSenha){
+            intent.apply {
+                putExtra("temSenha",true)
+            }
+        }
         setResult(RESULT_OK,intent)
         finish()
+    }
 
+    fun excluir(){
+        val intent = Intent().apply {
+            putExtra("excluir",true)
+        }
+        setResult(RESULT_OK,intent)
+        finish()
     }
 }

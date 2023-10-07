@@ -39,4 +39,15 @@ class SenhaAdapter (var contexto : Context, var listaDeSenhas: MutableList<Senha
         this.listaDeSenhas.add(novaSenha)
         notifyDataSetChanged()
     }
+
+    fun alterarSenha(novaSenha:Senha, posicao:Int){
+        this.listaDeSenhas[posicao] = novaSenha
+        notifyDataSetChanged()
+    }
+
+    fun excluirSenha(posicao:Int){
+        this.listaDeSenhas.removeAt(posicao)
+        notifyDataSetChanged()
+    }
+
 }

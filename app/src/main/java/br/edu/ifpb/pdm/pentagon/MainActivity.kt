@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var botaoNovaSenha: FloatingActionButton;
     private var senhas = mutableListOf<Senha>()
     private var caracteres = mutableListOf<String>()
+    private var posicaoDaSenhaAlterada = 0;
 
     private val gerenciadorResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode == RESULT_OK){
@@ -35,10 +36,17 @@ class MainActivity : AppCompatActivity() {
 
                 Log.i("VALORES","${temCS} - ${temLM} - ${temN}")
                 val senha = Senha(descricao,temLM,temCS,temN,tamanho)
+
 //                this.senhas.add(senha)
-                Log.i("SENHA","${senha.getSenha()}")
+                Log.i("SENHA",senha.getSenha())
                 Log.i("TAMANHO","${this.senhas.size}")
-                atualizarLista(senha)
+                if(it.data?.getBooleanExtra("temSenha",false) == true){
+                    alterarSenha(senha,this.posicaoDaSenhaAlterada)
+                }else if(it.data?.getBooleanExtra("excluir",false)==true){
+                    excluirSenha(this.posicaoDaSenhaAlterada)
+                }else{
+                    atualizarLista(senha)
+                }
             }
         }
     }
@@ -67,9 +75,18 @@ class MainActivity : AppCompatActivity() {
         (this.listinhaDeSenha.adapter as SenhaAdapter).adicionar(senha)
     }
 
+    fun alterarSenha(novaSenha:Senha,posicao:Int){
+        (this.listinhaDeSenha.adapter as SenhaAdapter).alterarSenha(novaSenha,posicao)
+    }
+
+    fun excluirSenha(posicao:Int){
+        (this.listinhaDeSenha.adapter as SenhaAdapter).excluirSenha(posicao)
+    }
+
     inner class EditarSenha: AdapterView.OnItemClickListener {
         override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
             val senha = this@MainActivity.senhas.get(p2)
+            posicaoDaSenhaAlterada = p2
             editarSenha(senha)
         }
     }
@@ -98,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         override fun onItemLongClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long):Boolean{
             val senha = this@MainActivity.senhas.get(p2)
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("simple text", "${senha.getSenha()}")
+            val clip: ClipData = ClipData.newPlainText("simple text", senha.getSenha())
             clipboard.setPrimaryClip(clip)
             return true
         }
